@@ -2,7 +2,7 @@
 // @Date:   20-12-2016
 // @Email:  ronan.lashermes@inria.fr
 // @Last modified by:   ronan
-// @Last modified time: 20-12-2016
+// @Last modified time: 21-12-2016
 
 
 
@@ -12,6 +12,71 @@
          non_camel_case_types,
          non_upper_case_globals,
          non_snake_case)]
+
+//Error codes
+pub const SCARD_S_SUCCESS: ::std::os::raw::c_long = 0;
+pub const SCARD_F_INTERNAL_ERROR: ::std::os::raw::c_long = 2148532225;
+pub const SCARD_E_CANCELLED: ::std::os::raw::c_long = 2148532226;
+pub const SCARD_E_INVALID_HANDLE: ::std::os::raw::c_long = 2148532227;
+pub const SCARD_E_INVALID_PARAMETER: ::std::os::raw::c_long = 2148532228;
+pub const SCARD_E_INVALID_TARGET: ::std::os::raw::c_long = 2148532229;
+pub const SCARD_E_NO_MEMORY: ::std::os::raw::c_long = 2148532230;
+pub const SCARD_F_WAITED_TOO_LONG: ::std::os::raw::c_long = 2148532231;
+pub const SCARD_E_INSUFFICIENT_BUFFER: ::std::os::raw::c_long = 2148532232;
+pub const SCARD_E_UNKNOWN_READER: ::std::os::raw::c_long = 2148532233;
+pub const SCARD_E_TIMEOUT: ::std::os::raw::c_long = 2148532234;
+pub const SCARD_E_SHARING_VIOLATION: ::std::os::raw::c_long = 2148532235;
+pub const SCARD_E_NO_SMARTCARD: ::std::os::raw::c_long = 2148532236;
+pub const SCARD_E_UNKNOWN_CARD: ::std::os::raw::c_long = 2148532237;
+pub const SCARD_E_CANT_DISPOSE: ::std::os::raw::c_long = 2148532238;
+pub const SCARD_E_PROTO_MISMATCH: ::std::os::raw::c_long = 2148532239;
+pub const SCARD_E_NOT_READY: ::std::os::raw::c_long = 2148532240;
+pub const SCARD_E_INVALID_VALUE: ::std::os::raw::c_long = 2148532241;
+pub const SCARD_E_SYSTEM_CANCELLED: ::std::os::raw::c_long = 2148532242;
+pub const SCARD_F_COMM_ERROR: ::std::os::raw::c_long = 2148532243;
+pub const SCARD_F_UNKNOWN_ERROR: ::std::os::raw::c_long = 2148532244;
+pub const SCARD_E_INVALID_ATR: ::std::os::raw::c_long = 2148532245;
+pub const SCARD_E_NOT_TRANSACTED: ::std::os::raw::c_long = 2148532246;
+pub const SCARD_E_READER_UNAVAILABLE: ::std::os::raw::c_long = 2148532247;
+pub const SCARD_P_SHUTDOWN: ::std::os::raw::c_long = 2148532248;
+pub const SCARD_E_PCI_TOO_SMALL: ::std::os::raw::c_long = 2148532249;
+pub const SCARD_E_READER_UNSUPPORTED: ::std::os::raw::c_long = 2148532250;
+pub const SCARD_E_DUPLICATE_READER: ::std::os::raw::c_long = 2148532251;
+pub const SCARD_E_CARD_UNSUPPORTED: ::std::os::raw::c_long = 2148532252;
+pub const SCARD_E_NO_SERVICE: ::std::os::raw::c_long = 2148532253;
+pub const SCARD_E_SERVICE_STOPPED: ::std::os::raw::c_long = 2148532254;
+pub const SCARD_E_UNEXPECTED: ::std::os::raw::c_long = 2148532255;
+pub const SCARD_E_UNSUPPORTED_FEATURE: ::std::os::raw::c_long = 2148532255;
+pub const SCARD_E_ICC_INSTALLATION: ::std::os::raw::c_long = 2148532256;
+pub const SCARD_E_ICC_CREATEORDER: ::std::os::raw::c_long = 2148532257;
+pub const SCARD_E_DIR_NOT_FOUND: ::std::os::raw::c_long = 2148532259;
+pub const SCARD_E_FILE_NOT_FOUND: ::std::os::raw::c_long = 2148532260;
+pub const SCARD_E_NO_DIR: ::std::os::raw::c_long = 2148532261;
+pub const SCARD_E_NO_FILE: ::std::os::raw::c_long = 2148532262;
+pub const SCARD_E_NO_ACCESS: ::std::os::raw::c_long = 2148532263;
+pub const SCARD_E_WRITE_TOO_MANY: ::std::os::raw::c_long = 2148532264;
+pub const SCARD_E_BAD_SEEK: ::std::os::raw::c_long = 2148532265;
+pub const SCARD_E_INVALID_CHV: ::std::os::raw::c_long = 2148532266;
+pub const SCARD_E_UNKNOWN_RES_MNG: ::std::os::raw::c_long = 2148532267;
+pub const SCARD_E_NO_SUCH_CERTIFICATE: ::std::os::raw::c_long = 2148532268;
+pub const SCARD_E_CERTIFICATE_UNAVAILABLE: ::std::os::raw::c_long = 2148532269;
+pub const SCARD_E_NO_READERS_AVAILABLE: ::std::os::raw::c_long = 2148532270;
+pub const SCARD_E_COMM_DATA_LOST: ::std::os::raw::c_long = 2148532271;
+pub const SCARD_E_NO_KEY_CONTAINER: ::std::os::raw::c_long = 2148532272;
+pub const SCARD_E_SERVER_TOO_BUSY: ::std::os::raw::c_long = 2148532273;
+pub const SCARD_W_UNSUPPORTED_CARD: ::std::os::raw::c_long = 2148532325;
+pub const SCARD_W_UNRESPONSIVE_CARD: ::std::os::raw::c_long = 2148532326;
+pub const SCARD_W_UNPOWERED_CARD: ::std::os::raw::c_long = 2148532327;
+pub const SCARD_W_RESET_CARD: ::std::os::raw::c_long = 2148532328;
+pub const SCARD_W_REMOVED_CARD: ::std::os::raw::c_long = 2148532329;
+pub const SCARD_W_SECURITY_VIOLATION: ::std::os::raw::c_long = 2148532330;
+pub const SCARD_W_WRONG_CHV: ::std::os::raw::c_long = 2148532331;
+pub const SCARD_W_CHV_BLOCKED: ::std::os::raw::c_long = 2148532332;
+pub const SCARD_W_EOF: ::std::os::raw::c_long = 2148532333;
+pub const SCARD_W_CANCELLED_BY_USER: ::std::os::raw::c_long = 2148532334;
+pub const SCARD_W_CARD_NOT_AUTHENTICATED: ::std::os::raw::c_long = 2148532335;
+
+
 pub const MAX_ATR_SIZE: ::std::os::raw::c_ulong = 33;
 pub const SCARD_AUTOALLOCATE: ::std::os::raw::c_ulong = 0xFFFFFFFFFFFFFFFF;
 pub const SCARD_SCOPE_USER: ::std::os::raw::c_ulong = 0;
@@ -165,4 +230,34 @@ extern "C" {
                           pcbAttrLen: LPDWORD) -> LONG;
     pub fn SCardSetAttrib(hCard: SCARDHANDLE, dwAttrId: DWORD,
                           pbAttr: LPCBYTE, cbAttrLen: DWORD) -> LONG;
+}
+
+
+
+#[test]
+fn test_scard() {
+    use std::ptr;
+    use std::ffi::CString;
+    // use scard::winscard::{SCARDCONTEXT, SCardEstablishContext, SCardReleaseContext, SCARD_SCOPE_SYSTEM};
+    use scard::winscard::*;
+
+    use libc;
+
+    let mut h_context: SCARDCONTEXT = SCARDCONTEXT::default();
+
+    unsafe {
+        SCardEstablishContext(SCARD_SCOPE_SYSTEM, ptr::null(), ptr::null(), &mut h_context);
+
+        let mut str_size = 256u64;
+        let mut readers_ptr = CString::new(Vec::with_capacity(str_size as usize)).unwrap();
+        let mut str_ptr = readers_ptr.into_raw();
+        SCardListReaders(h_context, ptr::null(), str_ptr, &mut str_size);
+        readers_ptr = CString::from_raw(str_ptr);
+
+        println!("Readers: {:?}, str size = {}", readers_ptr, str_size);
+
+        SCardReleaseContext(h_context);
+    }
+
+
 }
