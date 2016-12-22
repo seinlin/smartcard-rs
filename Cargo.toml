@@ -9,7 +9,10 @@
 [package]
 name = "smartcard"
 version = "0.1.0"
-authors = ["Ronan <ronan.lashermes@inria.fr>"]
+authors = ["Ronan 'Artefaritaj' Lashermes <ronan.lashermes@inria.fr>"]
+description = "A PC/SC wrapper to communicate with smartcards."
+repository = "https://gitlab.com/Artefaritaj/smartcard-rs"
+license = "MIT"
 
 [dependencies]
 libc = "0.2"
