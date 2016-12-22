@@ -2,7 +2,7 @@
 // @Date:   20-12-2016
 // @Email:  ronan.lashermes@inria.fr
 // @Last modified by:   ronan
-// @Last modified time: 21-12-2016
+// @Last modified time: 22-12-2016
 
 
 
@@ -46,7 +46,7 @@ pub const SCARD_E_CARD_UNSUPPORTED: ::std::os::raw::c_long = 2148532252;
 pub const SCARD_E_NO_SERVICE: ::std::os::raw::c_long = 2148532253;
 pub const SCARD_E_SERVICE_STOPPED: ::std::os::raw::c_long = 2148532254;
 pub const SCARD_E_UNEXPECTED: ::std::os::raw::c_long = 2148532255;
-pub const SCARD_E_UNSUPPORTED_FEATURE: ::std::os::raw::c_long = 2148532255;
+pub const SCARD_E_UNSUPPORTED_FEATURE: ::std::os::raw::c_long = 2148532258;
 pub const SCARD_E_ICC_INSTALLATION: ::std::os::raw::c_long = 2148532256;
 pub const SCARD_E_ICC_CREATEORDER: ::std::os::raw::c_long = 2148532257;
 pub const SCARD_E_DIR_NOT_FOUND: ::std::os::raw::c_long = 2148532259;
@@ -185,7 +185,7 @@ extern "C" {
 
 #[link(name="pcsclite")]
 extern "C" {
-    pub fn pcsc_stringify_error(arg1: LONG) -> *mut ::std::os::raw::c_char;
+    // pub fn pcsc_stringify_error(arg1: LONG) -> *mut ::std::os::raw::c_char;
     pub fn SCardEstablishContext(dwScope: DWORD, pvReserved1: LPCVOID,
                                  pvReserved2: LPCVOID,
                                  phContext: LPSCARDCONTEXT) -> LONG;
@@ -230,34 +230,4 @@ extern "C" {
                           pcbAttrLen: LPDWORD) -> LONG;
     pub fn SCardSetAttrib(hCard: SCARDHANDLE, dwAttrId: DWORD,
                           pbAttr: LPCBYTE, cbAttrLen: DWORD) -> LONG;
-}
-
-
-
-#[test]
-fn test_scard() {
-    use std::ptr;
-    use std::ffi::CString;
-    // use scard::winscard::{SCARDCONTEXT, SCardEstablishContext, SCardReleaseContext, SCARD_SCOPE_SYSTEM};
-    use scard::winscard::*;
-
-    use libc;
-
-    let mut h_context: SCARDCONTEXT = SCARDCONTEXT::default();
-
-    unsafe {
-        SCardEstablishContext(SCARD_SCOPE_SYSTEM, ptr::null(), ptr::null(), &mut h_context);
-
-        let mut str_size = 256u64;
-        let mut readers_ptr = CString::new(Vec::with_capacity(str_size as usize)).unwrap();
-        let mut str_ptr = readers_ptr.into_raw();
-        SCardListReaders(h_context, ptr::null(), str_ptr, &mut str_size);
-        readers_ptr = CString::from_raw(str_ptr);
-
-        println!("Readers: {:?}, str size = {}", readers_ptr, str_size);
-
-        SCardReleaseContext(h_context);
-    }
-
-
 }

@@ -2,7 +2,7 @@
 # @Date:   20-12-2016
 # @Email:  ronan.lashermes@inria.fr
 # @Last modified by:   ronan
-# @Last modified time: 20-12-2016
+# @Last modified time: 22-12-2016
 
 
 
@@ -14,3 +14,4 @@ authors = ["Ronan <ronan.lashermes@inria.fr>"]
 [dependencies]
 libc = "0.2"
 error-chain = "0.7"
+log = "0.3"

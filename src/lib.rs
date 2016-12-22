@@ -2,7 +2,7 @@
 // @Date:   20-12-2016
 // @Email:  ronan.lashermes@inria.fr
 // @Last modified by:   ronan
-// @Last modified time: 21-12-2016
+// @Last modified time: 22-12-2016
 
 extern crate libc;
 
@@ -11,8 +11,13 @@ extern crate libc;
 #[macro_use]
 extern crate error_chain;
 
+#[macro_use]
+extern crate log;
+
 pub mod scard;
-pub mod safe;
+pub mod logic;
+pub mod parameters;
+
 
 // We'll put our errors in an `errors` module, and other modules in
 // this crate will `use errors::*;` to get access to everything
