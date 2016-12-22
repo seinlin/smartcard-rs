@@ -14,9 +14,24 @@ This library is a wrapper for the PC/SC driver. It enables communication between
 
 ## Changelog
 
-- 0.1.0: Initial version: minimal API allowing to send raw command to a smartcard.
+- 0.1.0: Initial version: minimal API allowing to send raw commands to a smartcard.
 
-## Example code
+## How to use this library
+
+### Add the crate
+
+In your **Cargo.toml**:
+```toml
+[dependencies]
+smartcard = "0.1"
+```
+
+In your *main.rs* or *lib.rs*:
+```rust
+extern crate smartcard;
+```
+
+### Example code
 
 
 ```rust
@@ -34,7 +49,7 @@ for r in readers.iter() {
 //Let's get the first reader.
 let reader = try!(readers.pop().ok_or(format!("no readers found")));
 
-///From the reader, we can connect to its smartcard this way.
+//From the reader, we can connect to its smartcard this way.
 let card = try!(reader.connect_to(&context, ShareMode::Auto, Protocol::Auto));
 
 //Now that we have a card available, we can send commands to it.
