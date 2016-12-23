@@ -72,11 +72,17 @@ impl Card {
     /// * `init_type` - How to reset the card.
     pub fn reconnect(&mut self, init_type: InitializationType) -> Result<()> {
         let mut protocol_choice: DWORD = DWORD::default();//allocate to receive chosen protocol
-        unsafe {
-            try!(
+        let result = unsafe {
                 parse_error_code(
-                    SCardReconnect(self.handle, self.share.to_value(), self.protocol.to_value(), init_type.to_value(), &mut protocol_choice)))
+                    SCardReconnect(self.handle, self.share.to_value(), self.protocol.to_value(), init_type.to_value(), &mut protocol_choice))
+        };
+
+        //if we fail to reconnect, disconnect in drop becomes useless
+        if result.is_err() {
+            self.to_dispose = false;
+            return result;
         }
+
         let chosen_protocol = try!(Protocol::from_value(protocol_choice));
 
         let pci = unsafe { match chosen_protocol {
