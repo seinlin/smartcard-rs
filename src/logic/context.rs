@@ -2,7 +2,7 @@
 // @Date:   21-12-2016
 // @Email:  ronan.lashermes@inria.fr
 // @Last modified by:   ronan
-// @Last modified time: 22-12-2016
+// @Last modified time: 23-12-2016
 
 use std::ptr;
 use std::ffi::CString;
@@ -15,7 +15,9 @@ use errors::*;
 use scard::winscard::{SCARDCONTEXT,
     SCardEstablishContext,
     SCardReleaseContext,
-    SCardListReaders};
+    SCardListReaders,
+    SCardIsValidContext,
+    SCARD_E_INVALID_HANDLE};
 
 ///The resource manager context is a representation of the state of the driver.
 #[derive(Debug)]
@@ -46,6 +48,15 @@ impl Context {
     ///Get the handle for this context
     pub fn get_handle(&self) -> SCARDCONTEXT {
         self.handle
+    }
+
+    ///Verify if a context is valid
+    pub fn is_valid(&self) -> Result<bool> {
+        let r_code = unsafe { SCardIsValidContext(self.handle) };
+        match r_code {
+            SCARD_E_INVALID_HANDLE  => Ok(false),
+            rc                      => parse_error_code(rc).and(Ok(true))
+        }
     }
 
     ///List all available readers
@@ -90,6 +101,7 @@ impl Drop for Context {
 fn test_context_creation() {
     let context = Context::establish_context_auto();
     assert!(context.is_ok());
+    assert!(context.is_valid().unwrap());
 }
 
 

@@ -2,7 +2,7 @@
 // @Date:   22-12-2016
 // @Email:  ronan.lashermes@inria.fr
 // @Last modified by:   ronan
-// @Last modified time: 22-12-2016
+// @Last modified time: 23-12-2016
 
 use errors::*;
 
@@ -10,13 +10,14 @@ use scard::winscard::{SCARDHANDLE,
     DWORD,
     SCardConnect,
     SCardDisconnect,
+    SCardReconnect,
     SCardTransmit,
     SCARD_IO_REQUEST,
     g_rgSCardT0Pci,
     g_rgSCardT1Pci,
     g_rgSCardRawPci};
 
-use parameters::{Protocol, ShareMode, CardDisposition};
+use parameters::{Protocol, ShareMode, CardDisposition, InitializationType};
 use logic::utils::parse_error_code;
 use logic::{Context, Reader};
 
@@ -44,15 +45,15 @@ impl Card {
     pub fn connect_to(context: &Context, reader: &Reader, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
         info!("Trying to connect to reader {}.", reader.get_name());
         let mut card_handle: SCARDHANDLE = SCARDHANDLE::default();//allocate to receive card handle value
-        let mut protocel_choice: DWORD = DWORD::default();//allocate to receive chosen protocol
+        let mut protocol_choice: DWORD = DWORD::default();//allocate to receive chosen protocol
         unsafe {
             let reader_cstr = try!(CString::new(reader.get_name()) .chain_err(|| "failed to convert to CString"));//convert rust String to CString
             try!(
                 parse_error_code(
-                    SCardConnect(context.get_handle(), reader_cstr.as_ptr(), share_mode.to_value(), preferred_protocol.to_value(), &mut card_handle, &mut protocel_choice)));
+                    SCardConnect(context.get_handle(), reader_cstr.as_ptr(), share_mode.to_value(), preferred_protocol.to_value(), &mut card_handle, &mut protocol_choice)));
 
         }
-        let chosen_protocol = try!(Protocol::from_value(protocel_choice));
+        let chosen_protocol = try!(Protocol::from_value(protocol_choice));
 
         let pci = unsafe { match chosen_protocol {
             Protocol::T0    => g_rgSCardT0Pci.clone(),
@@ -64,6 +65,29 @@ impl Card {
 
         info!("Connection to reader {} achieved.", reader.get_name());
         Ok(Card { handle: card_handle, protocol: chosen_protocol, share: share_mode, to_dispose: true, pci: pci})
+    }
+
+    ///Reconnect to the smartcard
+    pub fn reconnect(&mut self, init_type: InitializationType) -> Result<()> {
+        let mut protocol_choice: DWORD = DWORD::default();//allocate to receive chosen protocol
+        unsafe {
+            try!(
+                parse_error_code(
+                    SCardReconnect(self.handle, self.share.to_value(), self.protocol.to_value(), init_type.to_value(), &mut protocol_choice)))
+        }
+        let chosen_protocol = try!(Protocol::from_value(protocol_choice));
+
+        let pci = unsafe { match chosen_protocol {
+            Protocol::T0    => g_rgSCardT0Pci.clone(),
+            Protocol::T1    => g_rgSCardT1Pci.clone(),
+            Protocol::Raw   => g_rgSCardRawPci.clone(),
+            _               => bail!("chosen protocol ({}) is not implemented")
+        }};
+
+        info!("Card reconnection achieved.");
+        self.pci = pci;
+        self.protocol = chosen_protocol;
+        Ok(())
     }
 
     /// Send a raw command to the smartcard.
