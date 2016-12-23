@@ -6,7 +6,7 @@
 @Last modified time: 23-12-2016
 -->
 
-This is a early version library, everything can break at any moment.
+This is an early version library, everything can break at any moment.
 
 # Smartcard-rs
 
