@@ -2,7 +2,7 @@
 // @Date:   20-12-2016
 // @Email:  ronan.lashermes@inria.fr
 // @Last modified by:   ronan
-// @Last modified time: 22-12-2016
+// @Last modified time: 23-12-2016
 
 
 
@@ -183,6 +183,7 @@ extern "C" {
     pub static g_rgSCardRawPci: SCARD_IO_REQUEST;
 }
 
+#[cfg(unix)]
 #[link(name="pcsclite")]
 extern "C" {
     // pub fn pcsc_stringify_error(arg1: LONG) -> *mut ::std::os::raw::c_char;
