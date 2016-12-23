@@ -2,9 +2,7 @@
 // @Date:   20-12-2016
 // @Email:  ronan.lashermes@inria.fr
 // @Last modified by:   ronan
-// @Last modified time: 22-12-2016
-
-extern crate libc;
+// @Last modified time: 23-12-2016
 
 // #![recursion_limit = "1024"]
 
