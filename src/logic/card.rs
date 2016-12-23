@@ -82,6 +82,9 @@ impl Card {
             self.to_dispose = false;
             return result;
         }
+        else {//reconnect is a success, so disconnect is necessary
+            self.to_dispose = true;
+        }
 
         let chosen_protocol = try!(Protocol::from_value(protocol_choice));
 
