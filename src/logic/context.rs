@@ -101,7 +101,7 @@ impl Drop for Context {
 fn test_context_creation() {
     let context = Context::establish_context_auto();
     assert!(context.is_ok());
-    assert!(context.is_valid().unwrap());
+    assert!(context.unwrap().is_valid().unwrap());
 }
 
 

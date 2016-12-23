@@ -3,7 +3,7 @@
 @Date:   22-12-2016
 @Email:  ronan.lashermes@inria.fr
 @Last modified by:   ronan
-@Last modified time: 22-12-2016
+@Last modified time: 23-12-2016
 -->
 
 This is a early version library, everything can break at any moment.
@@ -19,7 +19,7 @@ This library is a wrapper for the PC/SC driver. It enables communication between
 In your **Cargo.toml**:
 ```toml
 [dependencies]
-smartcard = "0.1"
+smartcard = "0.2"
 ```
 
 In your *main.rs* or *lib.rs*:
