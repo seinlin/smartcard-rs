@@ -1,1 +1,2 @@
 - 0.1.0: Initial version: minimal API allowing to send raw commands to a smartcard.
+- 0.2.0: Added card.reconnect() and context validation.

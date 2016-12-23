@@ -67,7 +67,9 @@ impl Card {
         Ok(Card { handle: card_handle, protocol: chosen_protocol, share: share_mode, to_dispose: true, pci: pci})
     }
 
-    ///Reconnect to the smartcard
+    /// Reconnect to the smartcard
+    /// # Arguments
+    /// * `init_type` - How to reset the card.
     pub fn reconnect(&mut self, init_type: InitializationType) -> Result<()> {
         let mut protocol_choice: DWORD = DWORD::default();//allocate to receive chosen protocol
         unsafe {
