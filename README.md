@@ -20,7 +20,7 @@ This library is a wrapper for the PC/SC driver. It enables communication between
 In your **Cargo.toml**:
 ```toml
 [dependencies]
-smartcard = "0.2"
+smartcard = "0.3"
 ```
 
 In your *main.rs* or *lib.rs*:

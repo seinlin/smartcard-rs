@@ -12,6 +12,8 @@ extern crate error_chain;
 #[macro_use]
 extern crate log;
 
+extern crate pcsc_sys;
+
 pub mod scard;
 pub mod logic;
 pub mod parameters;
