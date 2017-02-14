@@ -3,7 +3,7 @@
 @Date:   22-12-2016
 @Email:  ronan.lashermes@inria.fr
 @Last modified by:   ronan
-@Last modified time: 23-12-2016
+@Last modified time: 28-12-2016
 -->
 
 This is an early version library, everything can break at any moment.
@@ -58,7 +58,7 @@ fn run() -> Result<()> {
     //Now that we have a card available, we can send commands to it.
     //select app on my card
     let cmd_vec = vec![0x00, 0xA4, 0x04, 0x00, 0x0B, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x00, 0x00];
-    let answer = try!(card.send_raw_command(&cmd_vec, 256));
+    let answer = try!(card.send_raw_command(&cmd_vec, 256));//256 is the maximum size of the expected answer
 
     println!("Answer: {:?}", answer);//I get 0x90 0x00, perfect!
     Ok(())
