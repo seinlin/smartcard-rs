@@ -6,6 +6,7 @@
 @Last modified time: 28-12-2016
 -->
 
+**There is now a better equivalent library: [pcsc-rust](https://github.com/bluetech/pcsc-rust).**
 This is an early version library, everything can break at any moment.
 
 # Smartcard-rs
