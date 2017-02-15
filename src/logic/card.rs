@@ -92,7 +92,7 @@ impl Card {
     /// # Arguments
     /// * `cmd` - The cmd you want to send.
     /// * `max_answer_size` - The maximum size of the expected answer.
-    pub fn send_raw_command(&self, cmd: &Vec<u8>, max_answer_size: usize) -> Result<Vec<u8>> {
+    pub fn send_raw_command(&self, cmd: &[u8], max_answer_size: usize) -> Result<Vec<u8>> {
         debug!("Sending command {:?} expecting {} bytes in answer at most.", cmd, max_answer_size);
         let mut rx_vec = vec![0;max_answer_size];
         let mut rx_size = max_answer_size as u64;

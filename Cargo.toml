@@ -8,7 +8,7 @@
 
 [package]
 name = "smartcard"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Artefaritaj <artefaritaj@0nline.fr>"]
 description = "A PC/SC wrapper to communicate with smartcards."
 repository = "https://gitlab.com/Artefaritaj/smartcard-rs"
