@@ -6,8 +6,6 @@
 
 use pcsc_sys::*;
 
-use errors::*;
-
 #[derive(Debug,Clone,Copy)]
 ///The communication protocol used with the smartcard.
 pub enum Protocol {
@@ -33,18 +31,6 @@ impl Protocol {
             &Protocol::Auto         => SCARD_PROTOCOL_ANY,
         }
     }
-
-    // pub fn from_value(val: DWORD) -> Result<Protocol> {
-    //     match val {
-    //         SCARD_PROTOCOL_T0           => Ok(Protocol::T0),
-    //         SCARD_PROTOCOL_T1           => Ok(Protocol::T1),
-    //         SCARD_PROTOCOL_UNDEFINED    => Ok(Protocol::Undefined),
-    //         SCARD_PROTOCOL_ANY          => Ok(Protocol::Any),
-    //         SCARD_PROTOCOL_RAW          => Ok(Protocol::Raw),
-    //         SCARD_PROTOCOL_T15          => Ok(Protocol::T15),
-    //         _                           => bail!("Impossible to decode protocol code ({})", val),
-    //     }
-    // }
 }
 
 impl From<DWORD> for Protocol {
