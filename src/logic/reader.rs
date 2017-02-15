@@ -9,7 +9,7 @@ use errors::*;
 use logic::{Context, Card};
 use parameters::{ShareMode, Protocol};
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Debug,Clone)]
 ///The card reader is what is really plugged into the computer.
@@ -35,7 +35,7 @@ impl Reader {
     /// * `context` - The resource manager context.
     /// * `share_mode` - How do you want to share the access to the smartcard.
     /// * `preferred_protocol` - What protocol do you want to use to connect to the smartcard.
-    pub fn connect_to(&self, context: Rc<Context>, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
+    pub fn connect_to(&self, context: Arc<Context>, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
         Card::connect_to(context, self, share_mode, preferred_protocol)
     }
 }

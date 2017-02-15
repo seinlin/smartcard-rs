@@ -14,14 +14,14 @@ use logic::{Context, Reader};
 
 use std::ffi::CString;
 use std::ptr;
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[allow(dead_code)]
 ///This struct represents a smartcard.
 // #[derive(Debug)]
 pub struct Card {
     handle:         SCARDHANDLE,
-    context:        Rc<Context>,//get a reference counter on the context: prevent context dropping while this card is alive
+    context:        Arc<Context>,//get a reference counter on the context: prevent context dropping while this card is alive
     protocol:       Protocol,
     share:          ShareMode,
     to_disconnect:     bool
@@ -34,7 +34,7 @@ impl Card {
     /// * `reader` - The reader that contains the smartcard you want to connect to.
     /// * `share_mode` - How do you want to share the access to the smartcard.
     /// * `preferred_protocol` - What protocol do you want to use to connect to the smartcard.
-    pub fn connect_to(context: Rc<Context>, reader: &Reader, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
+    pub fn connect_to(context: Arc<Context>, reader: &Reader, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
         info!("Trying to connect to reader {}.", reader.get_name());
         let mut card_handle: SCARDHANDLE = SCARDHANDLE::default();//allocate to receive card handle value
         let mut protocol_choice: DWORD = DWORD::default();//allocate to receive chosen protocol

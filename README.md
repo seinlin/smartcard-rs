@@ -37,11 +37,11 @@ use smartcard::logic::Context;
 use smartcard::parameters::{ShareMode, Protocol};
 use smartcard::errors::*;
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 fn run() -> Result<()> {
     //First we create the resource manager context. I think of it as 'the driver'.
-    let context = Rc::new(try!(Context::establish_context_auto()));
+    let context = Arc::new(try!(Context::establish_context_auto()));
 
     //The context allows to list all available card readers.
     let mut readers = try!(context.list_readers());
@@ -56,7 +56,7 @@ fn run() -> Result<()> {
 
     //From the reader, we can connect to its smartcard this way.
     let card = try!(reader.connect_to(context.clone(), ShareMode::Auto, Protocol::Auto));
-    //we clone the Rc<Context> so that even if we
+    //we clone the Arc<Context> so that even if we
     //drop(context)
     //the context still exists while the card is alive
 
