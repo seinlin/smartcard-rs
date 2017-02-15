@@ -4,13 +4,7 @@
 // @Last modified by:   ronan
 // @Last modified time: 22-12-2016
 
-use scard::winscard::{SCARD_PROTOCOL_UNDEFINED,
-    SCARD_PROTOCOL_T0,
-    SCARD_PROTOCOL_T1,
-    SCARD_PROTOCOL_RAW,
-    SCARD_PROTOCOL_T15,
-    SCARD_PROTOCOL_ANY,
-    DWORD};
+use pcsc_sys::*;
 
 use errors::*;
 
@@ -40,15 +34,29 @@ impl Protocol {
         }
     }
 
-    pub fn from_value(val: DWORD) -> Result<Protocol> {
+    // pub fn from_value(val: DWORD) -> Result<Protocol> {
+    //     match val {
+    //         SCARD_PROTOCOL_T0           => Ok(Protocol::T0),
+    //         SCARD_PROTOCOL_T1           => Ok(Protocol::T1),
+    //         SCARD_PROTOCOL_UNDEFINED    => Ok(Protocol::Undefined),
+    //         SCARD_PROTOCOL_ANY          => Ok(Protocol::Any),
+    //         SCARD_PROTOCOL_RAW          => Ok(Protocol::Raw),
+    //         SCARD_PROTOCOL_T15          => Ok(Protocol::T15),
+    //         _                           => bail!("Impossible to decode protocol code ({})", val),
+    //     }
+    // }
+}
+
+impl From<DWORD> for Protocol {
+    fn from (val: DWORD) -> Protocol {
         match val {
-            SCARD_PROTOCOL_T0           => Ok(Protocol::T0),
-            SCARD_PROTOCOL_T1           => Ok(Protocol::T1),
-            SCARD_PROTOCOL_UNDEFINED    => Ok(Protocol::Undefined),
-            SCARD_PROTOCOL_ANY          => Ok(Protocol::Any),
-            SCARD_PROTOCOL_RAW          => Ok(Protocol::Raw),
-            SCARD_PROTOCOL_T15          => Ok(Protocol::T15),
-            _                           => bail!("Impossible to decode protocol code ({})", val),
+            SCARD_PROTOCOL_T0           => Protocol::T0,
+            SCARD_PROTOCOL_T1           => Protocol::T1,
+            SCARD_PROTOCOL_UNDEFINED    => Protocol::Undefined,
+            SCARD_PROTOCOL_ANY          => Protocol::Any,
+            SCARD_PROTOCOL_RAW          => Protocol::Raw,
+            SCARD_PROTOCOL_T15          => Protocol::T15,
+            _                           => Protocol::Undefined
         }
     }
 }

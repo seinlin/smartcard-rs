@@ -1,3 +1,5 @@
-- 0.1.0: Initial version: minimal API allowing to send raw commands to a smartcard.
-- 0.2.0: Added card.reconnect() and context validation.
-- 0.3.0: Now use pcsc-sys: should work with windows (untested)
+- 0.1.0:  Initial version: minimal API allowing to send raw commands to a smartcard.
+- 0.2.0:  Added card.reconnect() and context validation.
+- 0.3.0:  Now use pcsc-sys instead of my own scard ffi: better project that should now work with windows.
+          Context is now provided as a Rc to the Card struct. So Context cannot be dropped while the Card obj is alive.
+          Reader name reading has no hardcoded buffer len anymore.

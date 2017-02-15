@@ -4,7 +4,7 @@
 // @Last modified by:   ronan
 // @Last modified time: 22-12-2016
 
-use scard::winscard::{SCARD_SHARE_SHARED, SCARD_SHARE_EXCLUSIVE, SCARD_SHARE_DIRECT, DWORD};
+use pcsc_sys::*;
 
 #[derive(Debug,Clone,Copy)]
 ///How to share the control of the smartcard.

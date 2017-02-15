@@ -6,16 +6,7 @@
 
 use errors::*;
 
-use scard::winscard::{SCARDHANDLE,
-    DWORD,
-    SCardConnect,
-    SCardDisconnect,
-    SCardReconnect,
-    SCardTransmit,
-    SCARD_IO_REQUEST,
-    g_rgSCardT0Pci,
-    g_rgSCardT1Pci,
-    g_rgSCardRawPci};
+use pcsc_sys::*;
 
 use parameters::{Protocol, ShareMode, CardDisposition, InitializationType};
 use logic::utils::parse_error_code;
@@ -23,16 +14,17 @@ use logic::{Context, Reader};
 
 use std::ffi::CString;
 use std::ptr;
+use std::rc::Rc;
 
+#[allow(dead_code)]
 ///This struct represents a smartcard.
-#[derive(Debug)]
+// #[derive(Debug)]
 pub struct Card {
     handle:         SCARDHANDLE,
+    context:        Rc<Context>,//get a reference counter on the context: prevent context dropping while this card is alive
     protocol:       Protocol,
     share:          ShareMode,
-    to_dispose:     bool,
-    ///Protocol Control Information (PCI)
-    pci:            SCARD_IO_REQUEST
+    to_disconnect:     bool
 }
 
 impl Card {
@@ -42,7 +34,7 @@ impl Card {
     /// * `reader` - The reader that contains the smartcard you want to connect to.
     /// * `share_mode` - How do you want to share the access to the smartcard.
     /// * `preferred_protocol` - What protocol do you want to use to connect to the smartcard.
-    pub fn connect_to(context: &Context, reader: &Reader, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
+    pub fn connect_to(context: Rc<Context>, reader: &Reader, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
         info!("Trying to connect to reader {}.", reader.get_name());
         let mut card_handle: SCARDHANDLE = SCARDHANDLE::default();//allocate to receive card handle value
         let mut protocol_choice: DWORD = DWORD::default();//allocate to receive chosen protocol
@@ -53,18 +45,21 @@ impl Card {
                     SCardConnect(context.get_handle(), reader_cstr.as_ptr(), share_mode.to_value(), preferred_protocol.to_value(), &mut card_handle, &mut protocol_choice)));
 
         }
-        let chosen_protocol = try!(Protocol::from_value(protocol_choice));
-
-        let pci = unsafe { match chosen_protocol {
-            Protocol::T0    => g_rgSCardT0Pci.clone(),
-            Protocol::T1    => g_rgSCardT1Pci.clone(),
-            Protocol::Raw   => g_rgSCardRawPci.clone(),
-            _               => bail!("chosen protocol ({}) is not implemented")
-        }};
-
+        let chosen_protocol = Protocol::from(protocol_choice);
 
         info!("Connection to reader {} achieved.", reader.get_name());
-        Ok(Card { handle: card_handle, protocol: chosen_protocol, share: share_mode, to_dispose: true, pci: pci})
+        Ok(Card { handle: card_handle, context: context, protocol: chosen_protocol, share: share_mode, to_disconnect: true})
+    }
+
+    /// Get a pointer to the static PCI from the specified protocol
+    pub fn get_pci(&self) -> Result<&SCARD_IO_REQUEST> {
+        let pci = unsafe { match self.protocol {
+            Protocol::T0    => &g_rgSCardT0Pci,
+            Protocol::T1    => &g_rgSCardT1Pci,
+            Protocol::Raw   => &g_rgSCardRawPci,
+            _               => bail!("chosen protocol ({}) is not implemented")
+        }};
+        Ok(pci)
     }
 
     /// Reconnect to the smartcard
@@ -79,25 +74,17 @@ impl Card {
 
         //if we fail to reconnect, disconnect in drop becomes useless
         if result.is_err() {
-            self.to_dispose = false;
+            self.to_disconnect = false;
             return result;
         }
         else {//reconnect is a success, so disconnect is necessary
-            self.to_dispose = true;
+            self.to_disconnect = true;
         }
 
-        let chosen_protocol = try!(Protocol::from_value(protocol_choice));
-
-        let pci = unsafe { match chosen_protocol {
-            Protocol::T0    => g_rgSCardT0Pci.clone(),
-            Protocol::T1    => g_rgSCardT1Pci.clone(),
-            Protocol::Raw   => g_rgSCardRawPci.clone(),
-            _               => bail!("chosen protocol ({}) is not implemented")
-        }};
+        let chosen_protocol = Protocol::from(protocol_choice);
+        self.protocol = chosen_protocol;
 
         info!("Card reconnection achieved.");
-        self.pci = pci;
-        self.protocol = chosen_protocol;
         Ok(())
     }
 
@@ -114,7 +101,7 @@ impl Card {
             let rx_buf_ptr = rx_vec.as_mut_ptr();
             try!(
                 parse_error_code(
-                    SCardTransmit(self.handle, &self.pci, cmd_buf_ptr, cmd.len() as u64, ptr::null_mut(), rx_buf_ptr, &mut rx_size)));
+                    SCardTransmit(self.handle, try!(self.get_pci()), cmd_buf_ptr, cmd.len() as u64, ptr::null_mut(), rx_buf_ptr, &mut rx_size)));
         }
         rx_vec.truncate(rx_size as usize);
         Ok(rx_vec)
@@ -125,7 +112,7 @@ impl Drop for Card {
     ///Disconnect the card at the end
     fn drop(&mut self) {
         //There are cases when we dont want to disconnect. Ex: failed reset so card is not connected
-        if self.to_dispose {
+        if self.to_disconnect {
             unsafe { SCardDisconnect(self.handle, CardDisposition::Auto.to_value()); } //cannot deal with fail here
         }
     }

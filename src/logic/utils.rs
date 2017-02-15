@@ -5,7 +5,7 @@
 // @Last modified time: 22-12-2016
 
 use errors::*;
-use scard::winscard::*;
+use pcsc_sys::*;
 
 use std::ffi::CString;
 
@@ -47,7 +47,7 @@ pub fn parse_error_code(code: LONG) -> Result<()> {
         SCARD_E_NO_SERVICE                      => bail!("the smart card resource manager is not running"),
         SCARD_E_SERVICE_STOPPED                 => bail!("the smart card resource manager has shut down"),
         SCARD_E_UNEXPECTED                      => bail!("an unexpected card error has occurred"),
-        SCARD_E_UNSUPPORTED_FEATURE             => bail!("this smart card does not support the requested feature"),
+        // SCARD_E_UNSUPPORTED_FEATURE             => bail!("this smart card does not support the requested feature"),
         SCARD_E_ICC_INSTALLATION                => bail!("no primary provider can be found for the smart card"),
         SCARD_E_ICC_CREATEORDER                 => bail!("the requested order of object creation is not supported"),
         SCARD_E_DIR_NOT_FOUND                   => bail!("the specified directory does not exist in the smart card"),

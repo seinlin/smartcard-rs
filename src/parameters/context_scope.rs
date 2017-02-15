@@ -4,7 +4,7 @@
 // @Last modified by:   ronan
 // @Last modified time: 22-12-2016
 
-use scard::winscard::{SCARD_SCOPE_USER, SCARD_SCOPE_SYSTEM, DWORD};
+use pcsc_sys::*;
 
 #[derive(Debug,Clone,Copy)]
 ///The scope of the resource manager context

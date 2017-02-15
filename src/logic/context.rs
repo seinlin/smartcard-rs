@@ -12,12 +12,7 @@ use logic::reader::Reader;
 use parameters::context_scope::ContextScope;
 
 use errors::*;
-use scard::winscard::{SCARDCONTEXT,
-    SCardEstablishContext,
-    SCardReleaseContext,
-    SCardListReaders,
-    SCardIsValidContext,
-    SCARD_E_INVALID_HANDLE};
+use pcsc_sys::*;
 
 ///The resource manager context is a representation of the state of the driver.
 #[derive(Debug)]
@@ -62,16 +57,25 @@ impl Context {
     ///List all available readers
     pub fn list_readers(&self) -> Result<Vec<Reader>> {
         let readers_names = unsafe {
-            let empty_buf = [0u8;1024];
-            let mut str_size = empty_buf.len() as u64;
-            let mut readers_ptr = CString::from_vec_unchecked([0u8;1024].to_vec());
-            let str_ptr = readers_ptr.into_raw();
+            //1# determine the required buffer len
+            let mut buf_size = 0u64;
             try!(
                 parse_error_code(
-                    SCardListReaders(self.handle, ptr::null(), str_ptr, &mut str_size)));
+                    SCardListReaders(self.handle, ptr::null(), ptr::null_mut(), &mut buf_size)));
+
+            //2# allocate the buffer
+            let empty_buf = vec![0u8;buf_size as usize];
+            let mut readers_ptr = CString::from_vec_unchecked(empty_buf);
+            let str_ptr = readers_ptr.into_raw();
+
+            //3# fill the buffer
+            try!(
+                parse_error_code(
+                    SCardListReaders(self.handle, ptr::null(), str_ptr, &mut buf_size)));
             readers_ptr = CString::from_raw(str_ptr);
 
-             parse_multi_cstring(readers_ptr, str_size)
+            //4# parse the buffer
+            parse_multi_cstring(readers_ptr, buf_size)
         };
 
         //map reader names to reader struct

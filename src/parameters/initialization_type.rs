@@ -4,10 +4,7 @@
 // @Last modified by:   ronan
 // @Last modified time: 23-12-2016
 
-use scard::winscard::{DWORD,
-    SCARD_LEAVE_CARD,
-    SCARD_RESET_CARD,
-    SCARD_UNPOWER_CARD};
+use pcsc_sys::*;
 
 #[derive(Debug,Clone,Copy)]
 ///Type of initialization to reconnect the card

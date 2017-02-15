@@ -4,11 +4,7 @@
 // @Last modified by:   ronan
 // @Last modified time: 22-12-2016
 
-use scard::winscard::{DWORD,
-    SCARD_LEAVE_CARD,
-    SCARD_RESET_CARD,
-    SCARD_UNPOWER_CARD,
-    SCARD_EJECT_CARD};
+use pcsc_sys::*;
 
 #[derive(Debug,Clone,Copy)]
 ///How to dispose (aka quit) the card.
