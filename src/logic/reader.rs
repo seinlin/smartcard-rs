@@ -36,7 +36,7 @@ impl Reader {
     /// * `share_mode` - How do you want to share the access to the smartcard.
     /// * `preferred_protocol` - What protocol do you want to use to connect to the smartcard.
     pub fn connect_to(&self, context: Arc<Context>, share_mode: ShareMode, preferred_protocol: Protocol) -> Result<Card> {
-        Card::connect_to(context, self, share_mode, preferred_protocol)
+        Card::connect_to(context.clone(), self, share_mode, preferred_protocol)
     }
 }
 

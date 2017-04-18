@@ -55,8 +55,8 @@ fn run() -> Result<()> {
     let reader = try!(readers.pop().ok_or(format!("no readers found")));
 
     //From the reader, we can connect to its smartcard this way.
-    let card = try!(reader.connect_to(context.clone(), ShareMode::Auto, Protocol::Auto));
-    //we clone the Arc<Context> so that even if we
+    let card = try!(reader.connect_to(context, ShareMode::Auto, Protocol::Auto));
+    //we use an Arc<Context> so that even if we
     //drop(context)
     //the context still exists while the card is alive
 
@@ -101,4 +101,4 @@ PRs welcome.
 
 You can check **[pcsc-rust](https://github.com/bluetech/pcsc-rust)** for another library with the same goal. I reused the **pcsc-sys** crate from this project for the lib bindings (starting from **smartcard-rs v 0.3.0** ).
 **pcsc-rust** should have better performances than **smartcard-rs** at the cost of a slightly less ergonomic API (in my opinion).
-In **pcsc-rust** the Card and Context are linked with lifetimes to prevent inappropriate Context dropping (instead of Rc in **smartcard-rs** case), which can cause self borrowing issues in some applications.
+In **pcsc-rust** the Card and Context are linked with lifetimes to prevent inappropriate Context dropping (instead of Arc in **smartcard-rs** case), which can cause self borrowing issues in some applications.
