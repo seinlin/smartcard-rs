@@ -8,13 +8,13 @@
 
 [package]
 name = "smartcard"
-version = "0.3.3"
+version = "0.3.4"
 authors = ["Artefaritaj <artefaritaj@0nline.fr>"]
 description = "A PC/SC wrapper to communicate with smartcards."
 repository = "https://gitlab.com/Artefaritaj/smartcard-rs"
 license = "MIT"
 
 [dependencies]
-error-chain = "0.7"
+error-chain = "0.10"
 log = "0.3"
 pcsc-sys = "0.1"
