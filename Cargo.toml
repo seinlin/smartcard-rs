@@ -17,4 +17,4 @@ license = "MIT"
 [dependencies]
 error-chain = "0.11"
 log = "0.3"
-pcsc-sys = "0.1"
+pcsc-sys = "1.0"
