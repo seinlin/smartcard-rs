@@ -39,10 +39,10 @@ impl Card {
         let mut card_handle: SCARDHANDLE = SCARDHANDLE::default();//allocate to receive card handle value
         let mut protocol_choice: DWORD = DWORD::default();//allocate to receive chosen protocol
         unsafe {
-            let reader_cstr = try!(CString::new(reader.get_name()) .chain_err(|| "failed to convert to CString"));//convert rust String to CString
-            try!(
-                parse_error_code(
-                    SCardConnect(context.get_handle(), reader_cstr.as_ptr(), share_mode.to_value(), preferred_protocol.to_value(), &mut card_handle, &mut protocol_choice)));
+            let reader_cstr = CString::new(reader.get_name()) .chain_err(|| "failed to convert to CString")?;
+            parse_error_code(
+                SCardConnect(context.get_handle(), reader_cstr.as_ptr(), share_mode.to_value(), preferred_protocol.to_value(), &mut card_handle, &mut protocol_choice)
+            )?;
 
         }
         let chosen_protocol = Protocol::from(protocol_choice);
@@ -95,13 +95,13 @@ impl Card {
     pub fn send_raw_command(&self, cmd: &[u8], max_answer_size: usize) -> Result<Vec<u8>> {
         debug!("Sending command {:?} expecting {} bytes in answer at most.", cmd, max_answer_size);
         let mut rx_vec = vec![0;max_answer_size];
-        let mut rx_size = max_answer_size as u64;
+        let mut rx_size = max_answer_size as u32;
         unsafe {
             let cmd_buf_ptr = cmd.as_ptr();
             let rx_buf_ptr = rx_vec.as_mut_ptr();
-            try!(
-                parse_error_code(
-                    SCardTransmit(self.handle, try!(self.get_pci()), cmd_buf_ptr, cmd.len() as u64, ptr::null_mut(), rx_buf_ptr, &mut rx_size)));
+            parse_error_code(
+                SCardTransmit(self.handle, self.get_pci()?, cmd_buf_ptr, cmd.len() as u32, ptr::null_mut(), rx_buf_ptr, &mut rx_size)
+            )?;
         }
         rx_vec.truncate(rx_size as usize);
         Ok(rx_vec)

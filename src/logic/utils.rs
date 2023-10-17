@@ -81,7 +81,7 @@ pub fn parse_error_code(code: LONG) -> Result<()> {
 }
 
 ///Parse a multi-cstring: several strings are separated by a /00, the end of the multi-cstring is marked by a double /00 /00.
-pub unsafe fn parse_multi_cstring(cstr: CString, max_size: u64) -> Vec<String> {
+pub unsafe fn parse_multi_cstring(cstr: CString, max_size: isize) -> Vec<String> {
     let mut result: Vec<String> = Vec::new();
 
     let mut current_str = String::new();
@@ -90,7 +90,7 @@ pub unsafe fn parse_multi_cstring(cstr: CString, max_size: u64) -> Vec<String> {
     let ptr = cstr.as_ptr();
 
     //Explore only up to max_size chars
-    for i in 0..(max_size as isize) {
+    for i in 0..(max_size) {
         let c = *ptr.offset(i) as u8 as char;
         if c == '\0' {
             consecutive_null += 1;

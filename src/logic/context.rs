@@ -25,9 +25,10 @@ impl Context {
     pub fn establish_context(scope: ContextScope) -> Result<Context> {
         let mut h_context: SCARDCONTEXT = SCARDCONTEXT::default();
 
-        try!(//return early if error
-            parse_error_code(//convert error code to result
-                unsafe { SCardEstablishContext(scope.to_value(), ptr::null(), ptr::null(), &mut h_context) }));//establish context
+        //return early if error
+        parse_error_code(//convert error code to result
+            unsafe { SCardEstablishContext(scope.to_value(), ptr::null(), ptr::null(), &mut h_context) }
+        )?;//establish context
 
         //Return new context
         debug!("Context created with scope {:?}.", scope);
@@ -58,10 +59,10 @@ impl Context {
     pub fn list_readers(&self) -> Result<Vec<Reader>> {
         let readers_names = unsafe {
             //1# determine the required buffer len
-            let mut buf_size = 0u64;
-            try!(
-                parse_error_code(
-                    SCardListReaders(self.handle, ptr::null(), ptr::null_mut(), &mut buf_size)));
+            let mut buf_size = 0u32;
+            parse_error_code(
+                SCardListReaders(self.handle, ptr::null(), ptr::null_mut(), &mut buf_size)
+            )?;
 
             //2# allocate the buffer
             let empty_buf = vec![0u8;buf_size as usize];
@@ -69,13 +70,13 @@ impl Context {
             let str_ptr = readers_ptr.into_raw();
 
             //3# fill the buffer
-            try!(
-                parse_error_code(
-                    SCardListReaders(self.handle, ptr::null(), str_ptr, &mut buf_size)));
+            parse_error_code(
+                SCardListReaders(self.handle, ptr::null(), str_ptr, &mut buf_size)
+            )?;
             readers_ptr = CString::from_raw(str_ptr);
 
             //4# parse the buffer
-            parse_multi_cstring(readers_ptr, buf_size)
+            parse_multi_cstring(readers_ptr, buf_size as isize)
         };
 
         //map reader names to reader struct
